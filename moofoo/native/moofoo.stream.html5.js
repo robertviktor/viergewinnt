@@ -57,10 +57,14 @@ moofooStream.prototype.rbeCheckenemyMove=function(x,y){
 
 	for  (var mySid in all_players_new)
 	{
-		if ( (all_players_new[mySid].x == x) && (all_players_new[mySid].y == y) )
+		if ( (all_players_new[mySid].x == x) && (all_players_new[mySid].y == y) ) //&& (all_players_new[mySid].num != myPlayernum) )
 		{
 			//alert ("Spieler:"+all_players_new[mySid].num)
-			return (all_players_new[mySid].num);
+			
+			var retval = all_players_new[mySid].num
+			
+			delete all_players_new[mySid];
+			return (retval);
 		}
 	}
 	return 0;

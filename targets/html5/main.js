@@ -5,7 +5,9 @@
 //Change this to true for a stretchy canvas!
 //
 var RESIZEABLE_CANVAS=false;
-var socket = new io.Socket("spearwolf.no.de", { port: 80, transports: ['websocket', 'flashsocket']  }); 
+var socket = new io.Socket("spearwolf.no.de", { port: 80 }); 
+//var socket = new io.Socket("spearwolf.no.de", { port: 80, transports: ['websocket', 'flashsocket']  }); 
+//var socket = new io.Socket("spearwolf.no.de", { port: 80, transports: ['xhr-multipart', 'xhr-polling', 'jsonp-polling'] }); 
 
 var mySessId = '0';
 var myPlayernum = 0;
@@ -89,6 +91,8 @@ jQuery(document).ready(function( e ){
 				all_players_new[sId] = playerobj;
 				
 				//alert (all_players_new[sId].num);
+				
+				
 				
 				if(msg.shared_objects[i].sessionId != mySessId)
 				{
