@@ -24,7 +24,7 @@ Class moofooStream="moofooStream"
 	
 	Method rbeGetRocketX()
 	Method rbeGetRocketY()
-	
+	Method get_rbe_selected_transport()
 End
 
 Public

@@ -833,7 +833,7 @@ JSONPPolling.xdomainCheck = function(){
 			this.connecting = true;
 			this.emit('connecting', [this.transport.type]);
 			
-			alert(this.transport.type);
+			rbe_selected_transport = this.transport.type;
 			
 			this.transport.connect();
 			if (this.options.connectTimeout){

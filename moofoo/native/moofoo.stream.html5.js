@@ -50,21 +50,23 @@ moofooStream.prototype.onRequestComplete=function( response ){ alert(response); 
 moofooStream.prototype.rbeSendSockMsg=function(x,y){ 
 
 	//alert("Dat jeht!"); 
-	socket.send('{"x":"'+x+'","y":"'+y+'","num":"'+myPlayernum+'"}');
+	socket.send('{"gid":"'+myGameId+'","x":"'+x+'","y":"'+y+'","num":"'+myPlayernum+'"}');
 };
 
 moofooStream.prototype.rbeCheckenemyMove=function(x,y){ 
 
 	for  (var mySid in all_players_new)
 	{
-		if ( (all_players_new[mySid].x == x) && (all_players_new[mySid].y == y) ) //&& (all_players_new[mySid].num != myPlayernum) )
+		if ( (all_players_new[mySid].x == x) && (all_players_new[mySid].y == y) && (all_players_new[mySid].num != myPlayernum) )
 		{
 			//alert ("Spieler:"+all_players_new[mySid].num)
-			
-			var retval = all_players_new[mySid].num
-			
-			delete all_players_new[mySid];
-			return (retval);
+			if(all_players_new[mySid].gid == myGameId)
+			{
+				var retval = all_players_new[mySid].num
+				
+				delete all_players_new[mySid];
+				return (retval);
+			}
 		}
 	}
 	return 0;
@@ -96,6 +98,12 @@ moofooStream.prototype.rbeGetRocketY=function(){
 	else 
 		return 0.0;
 };
+
+moofooStream.prototype.get_rbe_selected_transport=function(){ 
+
+		return "tr:"+ rbe_selected_transport+" Sid:"+mySessId+" Gid:"+myGameId;
+};
+
 
 function IsNumeric(input)
 {

@@ -10,6 +10,7 @@ var socket = new io.Socket("spearwolf.no.de", { port: 80 });
 //var socket = new io.Socket("spearwolf.no.de", { port: 80, transports: ['xhr-multipart', 'xhr-polling', 'jsonp-polling'] }); 
 
 var mySessId = '0';
+var myGameId = 0;
 var myPlayernum = 0;
 var numOfAllPlayers = 0;
 var all_players_new = new Array();
@@ -17,6 +18,8 @@ var all_players_old = new Array();
 
 var Rocket_X = 0.0;
 var Rocket_Y = 0.0;
+
+var rbe_selected_transport = "none";
 
 
 //Start us up!
@@ -47,79 +50,77 @@ jQuery(document).ready(function( e ){
     
 	socket.on('connect', function() { 
 		//console.info("connect ",arguments); 
-		
 	});
 	  
 	  
 	  
-    socket.on('message', function(data) {
-	
-
-	
+	socket.on('message', function (data)
+	{
 		var msg = JSON.parse(data);
-        if ("exception" in msg) {
-          alert(msg.exception.description+msg.exception.exception);
-        } else {
-		
-			if (("count" in msg) && (myPlayernum == 0)) {
+		if ("exception" in msg)
+		{
+			alert(msg.exception.description + msg.exception.exception);
+		}
+		else
+		{
+			if (("count" in msg) && (myPlayernum == 0))
+			{
 				myPlayernum = msg.count;
+				myGameId = Math.floor((myPlayernum/2.0)-0.5);
+				
+				//alert (myGameId);
+				
 				//alert (myPlayernum);
 			}
-		
-			if ("hello" in msg) {
+
+			if ("hello" in msg)
+			{
 				//console.info("session ID: "+msg.hello.sessionId);
 				mySessId = msg.hello.sessionId;
 			}
-		  
-		  
-		  
-		  else {
-		  
-			if (("count" in msg) ) {
-				numOfAllPlayers = msg.count;
-			}
-		  
-			for  (var i=0; i< msg.shared_objects.length; i++)
+			else
 			{
-				var sId = msg.shared_objects[i].sessionId+"";
-				var playerobj = new Object(); 
-				playerobj.update=msg.shared_objects[i].updatedAt;
-				playerobj.x=msg.shared_objects[i].x;
-				playerobj.y=msg.shared_objects[i].y;
-				playerobj.num=msg.shared_objects[i].num;
-				playerobj.sId=sId;
-				all_players_new[sId] = playerobj;
-				
-				//alert (all_players_new[sId].num);
-				
-				
-				
-				if(msg.shared_objects[i].sessionId != mySessId)
+				if (("count" in msg))
 				{
-					// for Rocket test
-					Rocket_X = msg.shared_objects[i].x;
-					Rocket_Y = msg.shared_objects[i].y;
-				
+					numOfAllPlayers = msg.count;
 				}
-				
-				
+
+				for (var i = 0; i < msg.shared_objects.length; i++)
+				{
+					var sId = msg.shared_objects[i].sessionId + "";
+					var playerobj = new Object();
+					playerobj.update = msg.shared_objects[i].updatedAt;
+					playerobj.x = msg.shared_objects[i].x;
+					playerobj.y = msg.shared_objects[i].y;
+					playerobj.num = msg.shared_objects[i].num;
+					playerobj.gid = msg.shared_objects[i].gid;
+					playerobj.sId = sId;
+					all_players_new[sId] = playerobj;
+
+					//alert (all_players_new[sId].num);
+
+
+					if (msg.shared_objects[i].sessionId != mySessId)
+					{
+						// for Rocket test
+						Rocket_X = msg.shared_objects[i].x;
+						Rocket_Y = msg.shared_objects[i].y;
+
+					}
+				}
+				//console.info("data:",data);
 			}
-		  
-		  
-			//console.info("data:",data);
-		  }
-        }
-        
+		}
+
 		//if ("count" in msg) {
-        //  jQuery(".client-count").html("[ <strong>"+msg.count+"</strong> client"+(msg.count == 1 ? '' : 's')+" currently connected .. ]");
-        //}
-		
-      });
+		//  jQuery(".client-count").html("[ <strong>"+msg.count+"</strong> client"+(msg.count == 1 ? '' : 's')+" currently connected .. ]");
+		//}
+	});
+		  
 	  
-	  
-      socket.on('disconnect', function() { 
+    socket.on('disconnect', function() { 
 			//console.error("disconnect ",arguments); 
-	  });
+	});
 
       
 	 // ENd Socket Stuff
